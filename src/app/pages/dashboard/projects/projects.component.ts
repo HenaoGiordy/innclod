@@ -12,6 +12,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { SelectModule } from 'primeng/select';
+import { NotificationService } from '../../../shared/services/alert.service';
 
 @Component({
   imports: [
@@ -34,7 +35,7 @@ export class ProjectsComponent {
 
   private readonly projectsSvc = inject(ProjectsService);
   private readonly router = inject(Router);
-  private readonly msg = inject(MessageService);
+  private readonly msg = inject(NotificationService);
 
   projects: Project[] = [];
   loading = true;
@@ -112,29 +113,17 @@ export class ProjectsComponent {
       );
       this.showForm = false;
       this.editing = null;
-      this.msg.add({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: 'Se actualizó el proyecto.',
-      });
+      this.msg.success('Se actualizó el proyecto.');
     } else {
       const lastId = Math.max(0, ...this.projects.map((p) => p.id));
       const newProject: Project = { id: lastId + 1, ...value } as Project;
       this.projects = [newProject, ...this.projects];
       this.showForm = false;
-      this.msg.add({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: 'Se creó el proyecto.',
-      });
+      this.msg.success('Se creó el proyecto.');
     }
   }
   deleteProject(id: number) {
     this.projects = this.projects.filter((p) => p.id !== id);
-    this.msg.add({
-      severity: 'success',
-      summary: 'Éxito',
-      detail: 'Se eliminó el proyecto.',
-    });
+    this.msg.info('Se eliminó el proyecto.');
   }
 }

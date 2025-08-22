@@ -12,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
+import { NotificationService } from '../../../shared/services/alert.service';
 
 @Component({
   imports: [
@@ -36,7 +37,7 @@ export class TasksComponent {
   private readonly router = inject(Router);
   private readonly tasksSvc = inject(TaskService);
   private readonly fb = inject(FormBuilder);
-  private readonly msg = inject(MessageService);
+  private readonly msg = inject(NotificationService);
 
   projectId!: number;
   tasks: Task[] = [];
@@ -107,18 +108,18 @@ export class TasksComponent {
         x.id === this.editing!.id ? { ...x, title, completed } : x
       );
       this.editing = null;
-      this.msg.add({ severity:'success', summary:'Éxito', detail:'Se actualizó la tarea.' });
+      this.msg.success('Se actualizó la tarea.');
     } else {
       const newId = Math.max(0, ...this.tasks.map(t => t.id)) + 1;
       const nt: Task = { userId: this.projectId, id: newId, title, completed };
       this.tasks = [nt, ...this.tasks];
-      this.msg.add({ severity:'success', summary:'Éxito', detail:'Se creó la tarea.' });
+      this.msg.success('Se creó la tarea.');
     }
 
     this.showForm = false;
   }
   deleteTask(id: number){
     this.tasks = this.tasks.filter(t => t.id !== id);
-    this.msg.add({ severity:'success', summary:'Éxito', detail:'Se eliminó la tarea.' });
+    this.msg.info('Se eliminó la tarea.');
   }
 }
