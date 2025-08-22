@@ -1,0 +1,15 @@
+<div class="flex justify-content-center align-items-center" style="min-height:100dvh">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="surface-card p-4 border-round-2xl shadow-2 w-full" style="max-width:380px">
+    <h2 class="mb-3">Iniciar sesión</h2>
+
+    <label class="block mb-2">Username</label>
+    <input pInputText formControlName="username" class="w-full mb-3" placeholder="Bret" />
+
+    <label class="block mb-2">Contraseña</label>
+    <p-password formControlName="password" [feedback]="false" [toggleMask]="true" class="mb-3" inputStyleClass="w-full" placeholder="123456"></p-password>
+
+    <button pButton type="submit" class="w-full mt-4" [disabled]="form.invalid || loading">Entrar</button>
+
+    <p class="mt-3 text-red-500" *ngIf="errorMsg">{{ errorMsg }}</p>
+  </form>
+</div>

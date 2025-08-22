@@ -1,0 +1,5 @@
+:host ::ng-deep a, 
+:host ::ng-deep a:visited {
+  color: inherit;
+  text-decoration: none;
+}

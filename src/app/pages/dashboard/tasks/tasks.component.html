@@ -1,0 +1,84 @@
+<div class="p-3">
+  <p-toolbar class="mb-3">
+    <div class="p-toolbar-group-left">
+      <button pButton icon="pi pi-arrow-left" label="Volver" (click)="back()" class="mr-2"></button>
+      <span class="text-xl font-bold">Tareas del proyecto #{{ projectId }}</span>
+    </div>
+    
+    <div class="p-toolbar-group-center">
+      <button pButton label="Añadir" icon="pi pi-plus" (click)="openCreate()"></button>
+    </div>
+
+     <div class="p-toolbar-group-right">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search mr-3"></i>
+        <input pInputText type="text" placeholder="Buscar..." (input)="onGlobalFilter($event)" />
+      </span>
+    </div>
+  </p-toolbar>
+
+  <p-table
+    #dt
+    [value]="tasks"
+    [loading]="loading"
+    dataKey="id"
+    styleClass="p-datatable-sm"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[5,10,20]">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="title">Título <p-sortIcon field="title" /></th>
+        <th pSortableColumn="completed">Completada <p-sortIcon field="completed" /></th>
+        <th style="width:140px"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-t>
+      <tr>
+        <td>{{ t.title }}</td>
+        <td><p-tag [value]="t.completed ? 'Sí' : 'No'" [severity]="completedSeverity(t.completed)"></p-tag></td>
+         <td class="text-right">
+          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-warning" (click)="openEdit(t)"></button>
+          <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" (click)="deleteTask(t.id)"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="3" class="text-center">Sin tareas para este proyecto</td></tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog
+  [(visible)]="showForm"
+  [modal]="true"
+  [dismissableMask]="true"
+  [style]="{ width: '480px', padding: '20px' }"
+  [header]="editing ? 'Editar tarea' : 'Nueva tarea'">
+
+  <form [formGroup]="form" (ngSubmit)="saveTask()">
+    <label class="block mb-2">Título</label>
+    <input pInputText formControlName="title" class="w-full mb-3" placeholder="Descripción de la tarea" />
+
+    <div class="flex align-items-center py-2 gap-2 mb-3">
+      <p-select
+        formControlName="completed"
+        [options]="[
+          { label: 'Sí', value: true },
+          { label: 'No', value: false }
+        ]"
+        optionLabel="label"
+        optionValue="value"
+        class="w-full">
+      </p-select>
+    </div>
+
+    <div class="flex justify-content-end gap-2">
+      <button pButton type="button" label="Cancelar" class="p-button-text" (click)="showForm=false"></button>
+      <button pButton type="submit" label="Guardar" [disabled]="form.invalid"></button>
+    </div>
+  </form>
+</p-dialog>

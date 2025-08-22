@@ -1,0 +1,126 @@
+<div class="p-3">
+  <p-toolbar class="mb-3">
+    <div class="p-toolbar-group-left">
+      <span class="text-xl font-bold">Proyectos</span>
+    </div>
+
+    <div class="p-toolbar-group-center"> 
+      <button pButton icon="pi pi-plus" label="añadir" (click)="openCreate()"></button>
+    </div>
+
+    <div class="p-toolbar-group-right">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search mr-3"></i>
+        <input pInputText type="text" placeholder="Buscar..." (input)="onGlobalFilter($event)" />
+      </span>
+    </div>
+  </p-toolbar>
+
+  <p-table
+    #dt
+    [value]="projects"
+    [loading]="loading"
+    dataKey="id"
+    styleClass="p-datatable-sm"
+    [paginator]="true"
+    [rows]="8"
+    [rowsPerPageOptions]="[5,8,10,20]"
+    [globalFilterFields]="['code','name','owner','email','city','status']">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="code">Código <p-sortIcon field="code" /></th>
+        <th pSortableColumn="name">Nombre <p-sortIcon field="name" /></th>
+        <th pSortableColumn="owner">Responsable <p-sortIcon field="owner" /></th>
+        <th pSortableColumn="city">Ciudad <p-sortIcon field="city" /></th>
+        <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+        <th pSortableColumn="status">Estado <p-sortIcon field="status" /></th>
+        <th style="width:200px"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-p>
+      <tr>
+        <td>{{ p.code }}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.owner }}</td>
+        <td>{{ p.city }}</td>
+        <td>{{ p.email }}</td>
+        <td><p-tag [value]="p.status" [severity]="statusSeverity(p.status)"></p-tag></td>
+        <td class="text-right">
+          <button pButton icon="pi pi-eye" class="p-button-rounded p-button-text" (click)="open(p)"></button>
+          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-warning" (click)="openEdit(p)"></button>
+          <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" (click)="deleteProject(p.id)"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7" class="text-center">No hay proyectos para mostrar</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+
+<p-dialog
+  [(visible)]="showForm"
+  [modal]="true"
+  [dismissableMask]="true"
+  [style]="{ width: '520px' }"
+  [header]="editing ? 'Editar proyecto' : 'Nuevo proyecto'">
+
+  <form [formGroup]="form" (ngSubmit)="saveProject()" class="grid">
+    <div class="col-12 md:col-6">
+      <label class="block mb-1">Código</label>
+      <input pInputText formControlName="code" class="w-full" />
+    </div>
+
+    <div class="col-12 md:col-6">
+      <label class="block mb-1">Estado</label>
+      <p-select
+        formControlName="status"
+        [options]="[
+          { label: 'Activo', value: 'Activo' },
+          { label: 'En pausa', value: 'En pausa' },
+          { label: 'Archivado', value: 'Archivado' }
+        ]"
+        optionLabel="label"
+        optionValue="value"
+        class="w-full">
+      </p-select>
+    </div>
+
+    <div class="col-12">
+      <label class="block mb-1">Nombre</label>
+      <input pInputText formControlName="name" class="w-full" />
+    </div>
+
+    <div class="col-12 md:col-6">
+      <label class="block mb-1">Responsable</label>
+      <input pInputText formControlName="owner" class="w-full" />
+    </div>
+
+    <div class="col-12 md:col-6">
+      <label class="block mb-1">Email</label>
+      <input pInputText formControlName="email" class="w-full" />
+    </div>
+
+    <div class="col-12 md:col-6">
+      <label class="block mb-1">Ciudad</label>
+      <input pInputText formControlName="city" class="w-full" />
+    </div>
+
+    <div class="col-12 md:col-6">
+      <label class="block mb-1">Website</label>
+      <input pInputText formControlName="website" class="w-full" />
+    </div>
+
+    <div class="col-12 flex justify-content-end gap-2 mt-3">
+      <button pButton type="button" label="Cancelar" class="p-button-text" (click)="showForm = false"></button>
+      <button pButton type="submit" label="Guardar" [disabled]="form.invalid"></button>
+    </div>
+  </form>
+</p-dialog>
+
