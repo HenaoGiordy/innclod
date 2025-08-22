@@ -25,8 +25,9 @@
     styleClass="p-datatable-sm"
     [paginator]="true"
     [rows]="10"
-    [rowsPerPageOptions]="[5,10,20]">
-
+    [rowsPerPageOptions]="[5,10,20]"
+    [globalFilterFields]="['title','completed']">
+    >
     <ng-template pTemplate="header">
       <tr>
         <th pSortableColumn="title">Título <p-sortIcon field="title" /></th>

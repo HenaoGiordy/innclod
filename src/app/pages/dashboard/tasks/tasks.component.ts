@@ -77,6 +77,7 @@ export class TasksComponent {
   completedSeverity(done: boolean) {
     return done ? 'success' : 'warn';
   }
+
   onGlobalFilter(event : Event){
     const value = (event.target as HTMLInputElement)?.value ?? '';
     this.dt?.filterGlobal(value, 'contains');
